@@ -1,3 +1,4 @@
+import { Footer } from './Components/Footer.tsx'
 import { Header } from './Components/Header.tsx'
 import { Container } from 'react-bootstrap'
 
@@ -10,6 +11,7 @@ export const App = () => {
           Ecommerce Webpage
         </Container>
       </main>
+      <Footer />
     </>
   )
 }
