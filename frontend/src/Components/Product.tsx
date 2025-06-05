@@ -1,31 +1,30 @@
-import { FC } from "react"
-import { Card } from "react-bootstrap"
+import { FC } from "react";
+import { Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-type Product = {
-    id: number;
-    name: string;
-    image: string;
-    price: number
-}
+type ProductType = {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+};
 
-export const Product: FC<Product> = ({id, name, image, price}) => {
+export const Product: FC<ProductType> = ({ id, name, image, price }) => {
   return (
     <Card className="my-3 p-3 rounded">
-        <a href={`/product/${id}`} >
-            <Card.Img src={image} variant="top" />
-        </a>
+      <Link to={`/product/${id}`}>
+        <Card.Img src={image} variant="top" />
+      </Link>
 
-        <Card.Body>
-            <a href={`/product/${id}`}>
-                <Card.Title>
-                    <strong>{name}</strong>
-                </Card.Title>
-            </a>
+      <Card.Body>
+        <Link to={`/product/${id}`}>
+          <Card.Title>
+            <strong>{name}</strong>
+          </Card.Title>
+        </Link>
 
-            <Card.Text>
-                ${price}
-            </Card.Text>
-        </Card.Body>
+        <Card.Text>${price}</Card.Text>
+      </Card.Body>
     </Card>
-)
-}
+  );
+};
