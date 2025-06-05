@@ -1,12 +1,12 @@
 import {Nav, Navbar, Container} from 'react-bootstrap';
-import {FaShoppingCart, FaUser} from 'react-icons/fa';
+import {FaShoppingCart, FaUser,FaShopify } from 'react-icons/fa';
 
 export const Header = () => {
   return (
     <header>
       <Navbar bg='dark' variant='dark' expand='md' collapseOnSelect>
         <Container>
-          <Navbar.Brand href='/'>EKart</Navbar.Brand>
+          <Navbar.Brand href='/'><FaShopify /> Potti Kada</Navbar.Brand>
           <Navbar.Toggle aria-controls='basic-navbar-nav'/>
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
