@@ -8,22 +8,22 @@ const Rating: FC<RatingProps> = ({ star, numReviews }) => {
   const renderStars = () => {
     const stars: JSX.Element[] = [];
     while (star >= 1) {
-      stars.push(<FaStar />);
+      stars.push(<FaStar key={stars.length} />);
       star--;
     }
-    if (star === 0.5) stars.push(<FaStarHalfAlt />);
+    if (star === 0.5) stars.push(<FaStarHalfAlt key={stars.length} />);
 
     while (stars.length < 5) {
-      stars.push(<FaRegStar />);
+      stars.push(<FaRegStar key={stars.length} />);
     }
 
     return stars;
   };
   return (
-    <div className="rating">
+    <span className="rating">
       {renderStars()}
       <span className="rating-text">{numReviews && `(${numReviews})`}</span>
-    </div>
+    </span>
   );
 };
 
