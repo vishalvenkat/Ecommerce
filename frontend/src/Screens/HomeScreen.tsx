@@ -15,6 +15,8 @@ export const HomeScreen: FC = () => {
               name={product.name}
               image={product.image}
               price={product.price}
+              numReviews={product.numReviews}
+              star={product.rating}
             />
           </Col>
         ))}
