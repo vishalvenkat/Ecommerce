@@ -3,12 +3,12 @@ import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Rating from "./Rating.tsx";
 
-type ProductType = {
+export type ProductType = {
   id: number;
   name: string;
   image: string;
   price: number;
-  star: number;
+  rating: number;
   numReviews: number;
 };
 
@@ -17,7 +17,7 @@ export const Product: FC<ProductType> = ({
   name,
   image,
   price,
-  star,
+  rating,
   numReviews,
 }) => {
   return (
@@ -34,7 +34,7 @@ export const Product: FC<ProductType> = ({
         </Link>
 
         <Card.Text>
-          <Rating star={star} numReviews={numReviews} />
+          <Rating rating={rating} numReviews={numReviews} />
         </Card.Text>
 
         <Card.Text>${price}</Card.Text>
