@@ -7,9 +7,11 @@ export type ProductType = {
   id: number;
   name: string;
   image: string;
+  description?: string;
   price: number;
   rating: number;
   numReviews: number;
+  countInStock?: number;
 };
 
 export const Product: FC<ProductType> = ({

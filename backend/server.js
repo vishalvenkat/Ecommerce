@@ -13,4 +13,11 @@ app.get("/api/products", (req, res) => {
   res.send(products);
 });
 
+app.get("/api/product/:id", (req, res) => {
+  const product = products.find(
+    (product) => product.id === Number(req.params.id)
+  );
+  res.json(product);
+});
+
 app.listen(PORT);
