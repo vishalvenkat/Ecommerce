@@ -1,8 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import products from "../backend/data/products.js";
+import connection from "./config/db.js";
 dotenv.config();
 
+connection();
 const app = express();
 const PORT = process.env.PORT;
 app.get("/health", (_req, res) => {
