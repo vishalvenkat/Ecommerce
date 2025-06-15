@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Rating from "./Rating.tsx";
 
 export type ProductType = {
-  id: number;
+  _id: number;
   name: string;
   image: string;
   description?: string;
@@ -15,7 +15,7 @@ export type ProductType = {
 };
 
 export const Product: FC<ProductType> = ({
-  id,
+  _id,
   name,
   image,
   price,
@@ -24,12 +24,12 @@ export const Product: FC<ProductType> = ({
 }) => {
   return (
     <Card className="my-3 p-3 rounded">
-      <Link to={`/product/${id}`}>
+      <Link to={`/products/${_id}`}>
         <Card.Img src={image} variant="top" />
       </Link>
 
       <Card.Body>
-        <Link to={`/product/${id}`}>
+        <Link to={`/products/${_id}`}>
           <Card.Title className="product-title">
             <strong>{name}</strong>
           </Card.Title>

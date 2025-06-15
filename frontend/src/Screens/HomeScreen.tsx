@@ -19,9 +19,9 @@ export const HomeScreen: FC = () => {
       <h1>Latest Product</h1>
       <Row>
         {products.map((product) => (
-          <Col key={product.id}>
+          <Col key={product._id}>
             <Product
-              id={product.id}
+              _id={product._id}
               name={product.name}
               image={product.image}
               price={product.price}
