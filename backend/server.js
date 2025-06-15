@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import DbConnection from "./config/db.js";
 import products from "./routes/product.js";
+import { errorHandler, notFound } from "./middleware/errorHandler.js";
 dotenv.config();
 
 DbConnection();
@@ -12,5 +13,6 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/products", products);
-
+app.use(notFound);
+app.use(errorHandler);
 app.listen(PORT);
