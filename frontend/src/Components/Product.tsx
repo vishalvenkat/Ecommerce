@@ -3,38 +3,40 @@ import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Rating from "./Rating.tsx";
 
-type ProductType = {
-  id: number;
+export type ProductType = {
+  _id: number;
   name: string;
   image: string;
+  description?: string;
   price: number;
-  star: number;
+  rating: number;
   numReviews: number;
+  countInStock?: number;
 };
 
 export const Product: FC<ProductType> = ({
-  id,
+  _id,
   name,
   image,
   price,
-  star,
+  rating,
   numReviews,
 }) => {
   return (
     <Card className="my-3 p-3 rounded">
-      <Link to={`/product/${id}`}>
+      <Link to={`/products/${_id}`}>
         <Card.Img src={image} variant="top" />
       </Link>
 
       <Card.Body>
-        <Link to={`/product/${id}`}>
+        <Link to={`/products/${_id}`}>
           <Card.Title className="product-title">
             <strong>{name}</strong>
           </Card.Title>
         </Link>
 
         <Card.Text>
-          <Rating star={star} numReviews={numReviews} />
+          <Rating rating={rating} numReviews={numReviews} />
         </Card.Text>
 
         <Card.Text>${price}</Card.Text>

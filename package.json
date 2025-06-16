@@ -1,0 +1,33 @@
+{
+  "name": "ecommerce",
+  "version": "1.0.0",
+  "description": "Ecommerce site using MERN stack",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vishalvenkat/Ecommerce.git"
+  },
+  "author": "Vishal Venkatesh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vishalvenkat/Ecommerce/issues"
+  },
+  "homepage": "https://github.com/vishalvenkat/Ecommerce#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "express": "^5.1.0",
+    "mongoose": "^8.15.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "dotenv": "^16.5.0",
+    "nodemon": "^3.1.10"
+  }
+}
