@@ -5,6 +5,8 @@ import Rating from "../Components/Rating.tsx";
 
 import { useGetProductsByIdQuery } from "../slices/productApiSlice.js";
 import { ProductType } from "../Components/Product.tsx";
+import Loader from "../Components/Loader.tsx";
+import AlertMessage from "../Components/AlertMessage.tsx";
 
 export const ProductScreen: FC = () => {
   const { id } = useParams();
@@ -13,8 +15,9 @@ export const ProductScreen: FC = () => {
 
   const currentProduct = data as ProductType;
 
-  if (isLoading) return <h1>Loading...</h1>;
-  if (isError || !currentProduct) <div>Error loading product</div>;
+  if (isLoading) return <Loader />;
+  if (isError || !currentProduct)
+    <AlertMessage variant={"danger"}>Error Loading Product</AlertMessage>;
   return (
     <>
       <Link to="/" className="btn btn-light my-3">

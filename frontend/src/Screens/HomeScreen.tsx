@@ -2,13 +2,18 @@ import { Col, Row } from "react-bootstrap";
 import { Product, ProductType } from "../Components/Product.tsx";
 import { FC } from "react";
 import { useGetProductsQuery } from "../slices/productApiSlice.js";
+import Loader from "../Components/Loader.tsx";
+import AlertMessage from "../Components/AlertMessage.tsx";
 
 export const HomeScreen: FC = () => {
   const { data, isLoading, isError } = useGetProductsQuery(undefined);
   const products = data as ProductType[];
 
-  if (isLoading) return <h1>Loading...</h1>;
-  if (isError) return <div>Error loading products</div>;
+  if (isLoading) return <Loader />;
+  if (isError)
+    return (
+      <AlertMessage variant={"danger"}>Error Loading Products</AlertMessage>
+    );
 
   return (
     <>
