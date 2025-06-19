@@ -1,21 +1,20 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Card, Col, Image, ListGroup, Row } from "react-bootstrap";
 import Rating from "../Components/Rating.tsx";
-import axios from "axios";
+
+import { useGetProductsByIdQuery } from "../slices/productApiSlice.js";
 import { ProductType } from "../Components/Product.tsx";
 
 export const ProductScreen: FC = () => {
   const { id } = useParams();
-  const [currentProduct, setCurrentProduct] = useState<ProductType>();
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const { data } = await axios.get(`/api/products/${id}`);
-      setCurrentProduct(data);
-    };
-    fetchProduct();
-  }, [id]);
+  const { data, isLoading, isError } = useGetProductsByIdQuery(id);
+
+  const currentProduct = data as ProductType;
+
+  if (isLoading) return <h1>Loading...</h1>;
+  if (isError || !currentProduct) <div>Error loading product</div>;
   return (
     <>
       <Link to="/" className="btn btn-light my-3">

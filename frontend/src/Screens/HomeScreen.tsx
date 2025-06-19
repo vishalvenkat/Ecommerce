@@ -4,7 +4,8 @@ import { FC } from "react";
 import { useGetProductsQuery } from "../slices/productApiSlice.js";
 
 export const HomeScreen: FC = () => {
-  const { data: products, isLoading, isError } = useGetProductsQuery({});
+  const { data, isLoading, isError } = useGetProductsQuery(undefined);
+  const products = data as ProductType[];
 
   if (isLoading) return <h1>Loading...</h1>;
   if (isError) return <div>Error loading products</div>;
@@ -13,7 +14,7 @@ export const HomeScreen: FC = () => {
     <>
       <h1>Latest Product</h1>
       <Row>
-        {products.map((product: ProductType) => (
+        {products.map((product) => (
           <Col key={product._id}>
             <Product
               _id={product._id}
