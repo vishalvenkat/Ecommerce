@@ -16,7 +16,8 @@ import { getNoOfItemsInCart, getTotalPrice } from "../utils/cartUtils.js";
 import { addToCart, removeFromCart } from "../slices/cartSlice.js";
 
 const CartScreen = () => {
-  const { cartItems } = useSelector((state: any) => state.cart);
+  const { cartItems, itemsPrice, shippingPrice, taxPrice, totalPrice } =
+    useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const addToCartHandler = (item: any, qty: number) => {
@@ -82,6 +83,9 @@ const CartScreen = () => {
       </Col>
       <Col md={4}>
         <Card>
+          <Card.Header>
+            <h3>Order Summary</h3>
+          </Card.Header>
           <ListGroup variant="flush">
             <ListGroup.Item>
               <Row>
@@ -91,14 +95,32 @@ const CartScreen = () => {
                 </Col>
               </Row>
             </ListGroup.Item>
-            <ListGroup.Item>
-              <Row>
-                <Col>Total Price:</Col>
-                <Col>
-                  <strong>${getTotalPrice(cartItems)}</strong>
-                </Col>
-              </Row>
-            </ListGroup.Item>
+            {cartItems.length !== 0 && (
+              <>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Items Price:</Col>
+                    <Col>${itemsPrice}</Col>
+                  </Row>
+                  <Row>
+                    <Col>Shipping Price:</Col>
+                    <Col>${shippingPrice}</Col>
+                  </Row>
+                  <Row>
+                    <Col>Tax Price:</Col>
+                    <Col>${taxPrice}</Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Total Price:</Col>
+                    <Col>
+                      <strong>${totalPrice}</strong>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              </>
+            )}
             <ListGroup.Item>
               <Button
                 type="button"

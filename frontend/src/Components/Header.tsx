@@ -9,7 +9,6 @@ export const Header = () => {
   // useSelector is used to access the redux store state
   const { cartItems } = useSelector((state: any) => state.cart);
 
-  const cartCount = getNoOfItemsInCart(cartItems);
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
@@ -27,7 +26,7 @@ export const Header = () => {
                 Cart
                 {cartItems.length > 0 && (
                   <Badge pill bg="success" className="ms-1">
-                    {cartCount}
+                    {getNoOfItemsInCart(cartItems)}
                   </Badge>
                 )}
               </Link>
