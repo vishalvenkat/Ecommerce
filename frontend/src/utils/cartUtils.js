@@ -2,10 +2,18 @@ export const addDecimals = (num) => {
   return Math.round(num * 100) / 100;
 };
 
-export const calculatePrices = (cartItems) => {
-  const itemsPrice = addDecimals(
+export const getNoOfItemsInCart = (cartItems) => {
+  return cartItems.reduce((acc, item) => acc + item.qty, 0);
+};
+
+export const getTotalPrice = (cartItems) => {
+  return addDecimals(
     cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
   );
+};
+
+export const calculatePrices = (cartItems) => {
+  const itemsPrice = getTotalPrice(cartItems);
 
   const shippingPrice = addDecimals(itemsPrice > 100 ? 0 : 10);
 
