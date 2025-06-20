@@ -10,6 +10,8 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const newItem = action.payload;
+      console.log(newItem);
+      console.log(JSON.stringify(state));
       const cartItems = state.cartItems;
       const index = cartItems.findIndex((x) => x._id === newItem._id);
 
@@ -23,14 +25,13 @@ const cartSlice = createSlice({
         calculatePrices(cartItems);
 
       Object.assign(state, {
-        cartItems,
         itemsPrice,
         shippingPrice,
         taxPrice,
         totalPrice,
       });
 
-      localStorage.setItem("cart", JSON.stringify(cartItems));
+      localStorage.setItem("cart", JSON.stringify(state));
     },
   },
 });
