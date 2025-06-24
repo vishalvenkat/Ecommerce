@@ -27,6 +27,13 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    ratings: {
+      type: Number,
+      required: false,
+      default: 1,
+      min: 1,
+      max: 5,
+    },
     reviews: {
       type: String,
       required: false,
