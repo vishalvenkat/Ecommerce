@@ -27,10 +27,9 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    ratings: {
+    rating: {
       type: Number,
       required: false,
-      default: 1,
       min: 1,
       max: 5,
     },
