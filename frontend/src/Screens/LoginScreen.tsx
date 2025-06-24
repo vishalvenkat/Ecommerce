@@ -1,22 +1,66 @@
 import { Form, InputGroup } from "react-bootstrap";
 import FormContainer from "../Components/FormContainer.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useLoginMutation } from "../slices/userApiSlice.js";
+import { setCredentials } from "../slices/authSlice.js";
+import AlertMessage from "../Components/AlertMessage.tsx";
 
 const LoginScreen = () => {
+  /**
+   * This part of the code checks if the user is already logged in.
+   * If the user is logged in, it redirects them to the page they were trying to
+   * access before logging in, or to the home page if no specific page was requested.
+   */
+  // Import userInfo from Redux state using useSelector
+  const { userInfo } = useSelector((state: any) => state.auth);
+
+  // Get the current URL's search query string (e.g., ?redirect=/cart)
+  const { search } = useLocation();
+
+  // Extract the value of the "redirect" query parameter from the URL.
+  // If it doesn't exist, default to "/"
+  const redirect = new URLSearchParams(search).get("redirect") || "/";
+
+  // useNavigate is a hook from React Router to programmatically change the route
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (userInfo) {
+      // Navigate to the redirect path (either from the query string or default "/")
+      navigate(redirect);
+    }
+  }, [userInfo, redirect, navigate]);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const dispatch = useDispatch();
+
+  const [login, { isLoading }] = useLoginMutation();
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const userData = {
+    const userInfo = {
       email,
       password,
     };
-    console.log(userData);
+
+    login(userInfo)
+      .unwrap()
+      .then((user) => {
+        dispatch(setCredentials(user));
+        navigate(redirect);
+      })
+      .catch((error) => {
+        // Handle error (e.g., show an alert or message)
+        <AlertMessage variant="danger">
+          {error?.data?.message || "Login failed. Please try again."}
+        </AlertMessage>;
+      });
   };
   return (
     <FormContainer>
@@ -55,16 +99,31 @@ const LoginScreen = () => {
             type="submit"
             value="Sign In"
             className="btn btn-primary"
+            disabled={isLoading}
           />
         </Form.Group>
         <Form.Group className="mt-3">
           <Form.Text className="text-muted">
-            New Customer? <Link to="/register">Register</Link>
+            New Customer?{" "}
+            <Link
+              to={redirect ? `/register?redirect=${redirect}` : `/register`}
+            >
+              Register
+            </Link>
           </Form.Text>
         </Form.Group>
         <Form.Group className="mt-3">
           <Form.Text className="text-muted">
-            Forgot Password? <Link to="/forgot-password">Reset Password</Link>
+            Forgot Password?{" "}
+            <Link
+              to={
+                redirect
+                  ? `/forgot-password?redirect=${redirect}`
+                  : `/forgot-password`
+              }
+            >
+              Reset Password
+            </Link>
           </Form.Text>
         </Form.Group>
       </Form>
