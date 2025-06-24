@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useLoginMutation } from "../slices/userApiSlice.js";
+import { useRegisterMutation } from "../slices/userApiSlice.js";
 import { setCredentials } from "../slices/authSlice.js";
 import AlertMessage from "../Components/AlertMessage.tsx";
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
   /**
    * This part of the code checks if the user is already logged in.
    * If the user is logged in, it redirects them to the page they were trying to
@@ -33,23 +33,27 @@ const LoginScreen = () => {
     }
   }, [userInfo, redirect, navigate]);
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const dispatch = useDispatch();
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [register, { isLoading }] = useRegisterMutation();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const userInfo = {
+      name,
       email,
       password,
     };
 
-    login(userInfo)
+    register(userInfo)
       .unwrap()
       .then((user) => {
         dispatch(setCredentials(user));
@@ -58,14 +62,24 @@ const LoginScreen = () => {
       .catch((error) => {
         // Handle error (e.g., show an alert or message)
         <AlertMessage variant="danger">
-          {error?.data?.message || "Login failed. Please try again."}
+          {error?.data?.message || "Registration failed. Please try again."}
         </AlertMessage>;
       });
   };
   return (
     <FormContainer>
       <Form onSubmit={handleSubmit}>
-        <h1>Sign In</h1>
+        <h1>Sign Up</h1>
+        <Form.Group controlId="name">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Your good name"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </Form.Group>
         <Form.Group controlId="email">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
@@ -94,39 +108,39 @@ const LoginScreen = () => {
             </InputGroup.Text>
           </InputGroup>
         </Form.Group>
+        <Form.Group controlId="confirmPassword">
+          <Form.Label>Confirm Password</Form.Label>
+          <InputGroup>
+            <Form.Control
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="*********"
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <InputGroup.Text
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={{ cursor: "pointer" }}
+            >
+              {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+            </InputGroup.Text>
+          </InputGroup>
+        </Form.Group>
         <Form.Group className="mt-3">
           <Form.Control
             type="submit"
-            value="Sign In"
+            value="Register"
             className="btn btn-primary"
             disabled={isLoading}
           />
         </Form.Group>
         <Form.Group className="mt-3">
           <Form.Text className="text-muted">
-            New Customer?{" "}
+            Already have an account?{" "}
             <Link
-              to={
-                redirect !== "/"
-                  ? `/register?redirect=${redirect}`
-                  : `/register`
-              }
+              to={redirect !== "/" ? `/login?redirect=${redirect}` : `/login`}
             >
-              Register
-            </Link>
-          </Form.Text>
-        </Form.Group>
-        <Form.Group className="mt-3">
-          <Form.Text className="text-muted">
-            Forgot Password?{" "}
-            <Link
-              to={
-                redirect !== "/"
-                  ? `/forgot-password?redirect=${redirect}`
-                  : `/forgot-password`
-              }
-            >
-              Reset Password
+              Login
             </Link>
           </Form.Text>
         </Form.Group>
@@ -135,4 +149,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
