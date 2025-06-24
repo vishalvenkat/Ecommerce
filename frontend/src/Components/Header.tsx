@@ -1,11 +1,11 @@
 import { Nav, Navbar, Container, Badge, NavDropdown } from "react-bootstrap";
 import { FaShoppingCart, FaUser, FaShopify } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getNoOfItemsInCart } from "../utils/cartUtils";
 import { useLogoutMutation } from "../slices/userApiSlice";
 import AlertMessage from "./AlertMessage.tsx";
-import { setCredentials } from "../slices/authSlice";
+import { removeCredentials } from "../slices/authSlice";
 
 export const Header = () => {
   // cart is from redux store.js
@@ -15,13 +15,15 @@ export const Header = () => {
 
   const [logout] = useLogoutMutation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const logoutHandler = () => {
-    logout(undefined)
+    logout({})
       .unwrap()
       .then(() => {
         <AlertMessage variant="Success">User Logged out</AlertMessage>;
-        dispatch(setCredentials(null));
+        dispatch(removeCredentials());
+        navigate("/login");
       })
       .catch((error) => {
         console.error("Logout failed:", error);
