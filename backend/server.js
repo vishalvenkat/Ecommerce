@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import DbConnection from "./config/db.js";
 import products from "./routes/product.js";
+import orders from "./routes/order.js";
 import user from "./routes/user.js";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 dotenv.config();
@@ -21,6 +22,7 @@ app.get("/health", (_req, res) => {
 
 app.use("/api/products", products);
 app.use("/api/users", user);
+app.use("/api/orders", orders);
 app.use(notFound);
 app.use(errorHandler);
 app.listen(PORT);

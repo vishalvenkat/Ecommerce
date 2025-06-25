@@ -9,7 +9,9 @@ import { saveShippingAddress } from "../slices/cartSlice.js";
 const ShippingScreen = () => {
   const { shippingAddress } = useSelector((state: any) => state.cart);
   const [address, setAddress] = useState(shippingAddress?.address || "");
-  const [pinCode, setPinCode] = useState(shippingAddress?.pinCode || "");
+  const [postalCode, setPostalCode] = useState(
+    shippingAddress?.postalCode || ""
+  );
   const [city, setCity] = useState(shippingAddress?.city || "");
   const [country, setCountry] = useState(shippingAddress?.country || "");
   const dispatch = useDispatch();
@@ -20,7 +22,7 @@ const ShippingScreen = () => {
 
     const shippingAddress = {
       address,
-      pinCode,
+      postalCode,
       city,
       country,
     };
@@ -39,11 +41,11 @@ const ShippingScreen = () => {
           onChangeHandler={(e) => setAddress(e.target.value)}
         />
         <CustomFormGroup
-          label="Pin code"
-          name="pinCode"
-          value={pinCode}
-          placeholder="Enter pin code"
-          onChangeHandler={(e) => setPinCode(e.target.value)}
+          label="Postal code"
+          name="postalCode"
+          value={postalCode}
+          placeholder="Enter postal code"
+          onChangeHandler={(e) => setPostalCode(e.target.value)}
         />
         <CustomFormGroup
           label="City"
