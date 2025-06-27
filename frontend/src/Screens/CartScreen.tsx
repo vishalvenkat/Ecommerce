@@ -16,7 +16,7 @@ import { getNoOfItemsInCart, getTotalPrice } from "../utils/cartUtils.js";
 import { addToCart, removeFromCart } from "../slices/cartSlice.js";
 
 const CartScreen = () => {
-  const { cartItems, itemsPrice, shippingPrice, taxPrice, totalPrice } =
+  const { orderItems, itemsPrice, shippingPrice, taxPrice, totalPrice } =
     useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,13 +35,13 @@ const CartScreen = () => {
     <Row>
       <Col md={8}>
         <h1 style={{ marginBottom: "20px" }}>Shopping Cart</h1>
-        {cartItems.length === 0 ? (
+        {orderItems.length === 0 ? (
           <AlertMessage variant={"success"}>
             Your cart is empty <Link to="/">Go Back</Link>
           </AlertMessage>
         ) : (
           <ListGroup variant="flush">
-            {cartItems.map((item: any) => (
+            {orderItems.map((item: any) => (
               <ListGroup.Item key={item._id}>
                 <Row>
                   <Col md={2}>
@@ -91,11 +91,11 @@ const CartScreen = () => {
               <Row>
                 <Col>Total Items</Col>
                 <Col>
-                  <strong>{getNoOfItemsInCart(cartItems)}</strong>
+                  <strong>{getNoOfItemsInCart(orderItems)}</strong>
                 </Col>
               </Row>
             </ListGroup.Item>
-            {cartItems.length !== 0 && (
+            {orderItems.length !== 0 && (
               <>
                 <ListGroup.Item>
                   <Row>
@@ -125,7 +125,7 @@ const CartScreen = () => {
               <Button
                 type="button"
                 className="btn-block"
-                disabled={cartItems.length === 0}
+                disabled={orderItems.length === 0}
                 onClick={checkoutHandler}
               >
                 Proceed to Checkout

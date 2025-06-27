@@ -13,7 +13,7 @@ const PaymentScreen = () => {
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(savePaymentMethod(paymentMethod));
-    navigate("/placeholder");
+    navigate("/placeorder");
   };
   return (
     <FormContainer>

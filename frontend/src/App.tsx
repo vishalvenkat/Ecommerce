@@ -10,6 +10,7 @@ import RegisterScreen from "./Screens/RegisterScreen.tsx";
 import ShippingScreen from "./Screens/ShippingScreen.tsx";
 import PrivateRoute from "./Components/PrivateRoute.tsx";
 import PaymentScreen from "./Screens/PaymentScreen.tsx";
+import PlaceOrderScreen from "./Screens/PlaceOrderScreen.tsx";
 
 export const App = () => {
   return (
@@ -26,6 +27,7 @@ export const App = () => {
             <Route path="" element={<PrivateRoute />}>
               <Route path="/shipping" element={<ShippingScreen />} />
               <Route path="/payment" element={<PaymentScreen />} />
+              <Route path="/placeorder" element={<PlaceOrderScreen />} />
             </Route>
           </Routes>
         </Container>

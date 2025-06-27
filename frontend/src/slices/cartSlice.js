@@ -3,7 +3,7 @@ import { calculatePrices } from "../utils/cartUtils";
 
 const initialState = localStorage.getItem("cart")
   ? JSON.parse(localStorage.getItem("cart"))
-  : { cartItems: [], shippingAddress: {}, paymentMethod: "Paypal" };
+  : { orderItems: [], shippingAddress: {}, paymentMethod: "Paypal" };
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -12,17 +12,17 @@ const cartSlice = createSlice({
       const newItem = action.payload;
       console.log(newItem);
       console.log(JSON.stringify(state));
-      const cartItems = state.cartItems;
-      const index = cartItems.findIndex((x) => x._id === newItem._id);
+      const orderItems = state.orderItems;
+      const index = orderItems.findIndex((x) => x._id === newItem._id);
 
       if (index !== -1) {
-        cartItems[index] = newItem; // Update existing item
+        orderItems[index] = newItem; // Update existing item
       } else {
-        cartItems.push(newItem); // Add new item
+        orderItems.push(newItem); // Add new item
       }
 
       const { itemsPrice, shippingPrice, taxPrice, totalPrice } =
-        calculatePrices(cartItems);
+        calculatePrices(orderItems);
 
       Object.assign(state, {
         itemsPrice,
@@ -35,11 +35,11 @@ const cartSlice = createSlice({
     },
     removeFromCart: (state, action) => {
       const itemId = action.payload;
-      const cartItems = state.cartItems.filter((item) => item._id !== itemId);
-      state.cartItems = cartItems;
+      const orderItems = state.orderItems.filter((item) => item._id !== itemId);
+      state.orderItems = orderItems;
 
       const { itemsPrice, shippingPrice, taxPrice, totalPrice } =
-        calculatePrices(cartItems);
+        calculatePrices(orderItems);
 
       Object.assign(state, {
         itemsPrice,
@@ -58,6 +58,14 @@ const cartSlice = createSlice({
       state.paymentMethod = action.payload;
       localStorage.setItem("cart", JSON.stringify(state));
     },
+    clearCart: (state) => {
+      state.orderItems = [];
+      state.itemsPrice = 0;
+      state.shippingPrice = 0;
+      state.taxPrice = 0;
+      state.totalPrice = 0;
+      localStorage.removeItem("cart");
+    },
   },
 });
 
@@ -66,6 +74,7 @@ export const {
   removeFromCart,
   saveShippingAddress,
   savePaymentMethod,
+  clearCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

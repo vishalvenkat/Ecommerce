@@ -1,0 +1,39 @@
+import { ORDERS_URL } from "../constants";
+import { apiSlice } from "./apiSlice";
+
+const endpoints = (builder) => ({
+  getMyOrders: builder.query({
+    query: () => ({
+      url: `${ORDERS_URL}/myorders`,
+      method: "GET",
+    }),
+  }),
+  addToCart: builder.mutation({
+    query: (orderData) => ({
+      url: ORDERS_URL,
+      method: "POST",
+      body: { ...orderData },
+    }),
+  }),
+  getMyOrderById: builder.query({
+    query: (id) => ({
+      url: `${ORDERS_URL}/${id}`,
+      method: "GET",
+    }),
+  }),
+  updatePaid: builder.mutation({
+    query: ({ id, paymentResult }) => ({
+      url: `${ORDERS_URL}/${id}/pay`,
+      method: "PUT",
+      body: paymentResult,
+    }),
+  }),
+});
+
+export const ordersApiSlice = apiSlice.injectEndpoints({ endpoints });
+export const {
+  useGetMyOrdersQuery,
+  useGetMyOrderByIdQuery,
+  useAddToCartMutation,
+  useUpdatePaidMutation,
+} = ordersApiSlice;

@@ -10,7 +10,7 @@ import { removeCredentials } from "../slices/authSlice";
 export const Header = () => {
   // cart is from redux store.js
   // useSelector is used to access the redux store state
-  const { cartItems } = useSelector((state: any) => state.cart);
+  const { orderItems } = useSelector((state: any) => state.cart);
   const { userInfo } = useSelector((state: any) => state.auth);
 
   const [logout] = useLogoutMutation();
@@ -67,9 +67,9 @@ export const Header = () => {
               <Link to="/cart" className="nav-link">
                 <FaShoppingCart />
                 Cart
-                {cartItems.length > 0 && (
+                {orderItems.length > 0 && (
                   <Badge pill bg="success" className="ms-1">
-                    {getNoOfItemsInCart(cartItems)}
+                    {getNoOfItemsInCart(orderItems)}
                   </Badge>
                 )}
               </Link>
