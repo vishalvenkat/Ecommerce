@@ -20,6 +20,7 @@ const endpoints = (builder) => ({
       url: `${ORDERS_URL}/${id}`,
       method: "GET",
     }),
+    keepUnusedDataFor: 5, // Keep data for 5 seconds
   }),
   updatePaid: builder.mutation({
     query: ({ id, paymentResult }) => ({
