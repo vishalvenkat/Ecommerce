@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Form, Row, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { useUpdateUserProfileMutation } from "../slices/userApiSlice";
 import Loader from "../Components/Loader.tsx";
 import CustomFormGroup from "../Components/CustomFormGroup.tsx";
+import { useGetMyOrdersQuery } from "../slices/ordersApiSlice.js";
+import { Link } from "react-router-dom";
 
 const ProfileScreen = () => {
   const [name, setName] = useState("");
@@ -30,31 +32,73 @@ const ProfileScreen = () => {
       alert("Passwords do not match");
       return;
     }
-    updateUserProfile({
+    const res = updateUserProfile({
       id: userInfo._id,
       name,
       email,
-      password,
-    })
-      .unwrap()
-      .then((res) => {
-        if (res) {
-          alert("Profile updated successfully");
-          dispatch(
-            setCredentials({
-              ...res,
-            })
-          );
-        }
+      password: password || undefined, // Only send password if it's not empty
+    }).unwrap();
+
+    dispatch(
+      setCredentials({
+        ...res,
       })
-      .catch((err) => {
-        alert(err?.data?.message || "Failed to update profile");
-      });
+    );
   };
+
+  const { data, isLoading: loadingOrders } = useGetMyOrdersQuery(undefined);
+  const orders: any = data || [];
 
   if (isLoading) {
     return <Loader />;
   }
+
+  const ordersTable = (
+    <Table striped hover responsive className="table-sm">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Order Date</th>
+          <th>Payment Method</th>
+          <th>Total Price</th>
+          <th>Payment Status</th>
+          <th>Delivery Status</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {orders.map((order: any) => (
+          <tr key={order._id}>
+            <td>{order._id}</td>
+            <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+            <td>{order.paymentMethod}</td>
+            <td>${order.totalPrice}</td>
+            <td>
+              {order.isPaid ? (
+                <span style={{ color: "green" }}>Paid</span>
+              ) : (
+                <span style={{ color: "red" }}>Pending</span>
+              )}
+            </td>
+            <td>
+              {order.isDelivered ? (
+                <span style={{ color: "green" }}>Delivered</span>
+              ) : (
+                <span style={{ color: "red" }}>Not Delivered</span>
+              )}
+            </td>
+            <td>
+              <Link to={`/order/${order._id}`}>
+                <Button variant="primary" className="btn-sm">
+                  Details
+                </Button>
+              </Link>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  );
   return (
     <Row>
       <Col md={5}>
@@ -100,7 +144,10 @@ const ProfileScreen = () => {
           </Card.Body>
         </Card>
       </Col>
-      <Col md={9}></Col>
+      <Col md={7}>
+        <h2>My Orders</h2>
+        {loadingOrders ? <Loader /> : ordersTable}
+      </Col>
     </Row>
   );
 };

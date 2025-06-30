@@ -10,7 +10,7 @@ import express from "express";
 import { protect, admin } from "../middleware/authHandler.js";
 const router = express.Router();
 
-router.get("/all", protect, getMyOrders);
+router.get("/myorders", protect, getMyOrders);
 
 // 2. POST and GET / (no ID)
 router.route("/").post(protect, AddToCart).get(protect, admin, getAllOrders);
