@@ -26,7 +26,7 @@ const endpoints = (builder) => ({
     query: ({ id, paymentResult }) => ({
       url: `${ORDERS_URL}/${id}/pay`,
       method: "PUT",
-      body: paymentResult,
+      body: { ...paymentResult },
     }),
   }),
 });

@@ -1,15 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useGetMyOrderByIdQuery } from "../slices/ordersApiSlice.js";
+import {
+  useGetMyOrderByIdQuery,
+  useUpdatePaidMutation,
+} from "../slices/ordersApiSlice.js";
 import Loader from "../Components/Loader.tsx";
-import { Card, Col, Image, ListGroup, Row } from "react-bootstrap";
+import { Button, Card, Col, Image, ListGroup, Row } from "react-bootstrap";
 
 const OrderScreen = () => {
   const { id } = useParams();
-  const { data, refetch, isLoading, error } = useGetMyOrderByIdQuery(id);
+  const { data, refetch, isLoading } = useGetMyOrderByIdQuery(id);
   const order: any = data || {};
-  console.log(order);
 
+  const [payment] = useUpdatePaidMutation();
+  const [paymentStatus, setPaymentStatus] = useState(false);
+
+  useEffect(() => {
+    if (order) {
+      setPaymentStatus(order.isPaid);
+    }
+  }, [order]);
+
+  const onPaymentClick = () => {
+    if (!order) return;
+    payment({
+      id,
+      paymentResult: {
+        id,
+        status: "paid",
+        email_address: order.user.email,
+        updateTime: new Date().toISOString(),
+      },
+    })
+      .unwrap()
+      .then((data: any) => {
+        setPaymentStatus(data.isPaid);
+        refetch();
+      });
+  };
   if (isLoading) {
     return <Loader />;
   }
@@ -115,6 +143,18 @@ const OrderScreen = () => {
                     <strong>Total:</strong>
                   </Col>
                   <Col>${order.totalPrice.toFixed(2)}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Button
+                    type="button"
+                    className="btn btn-block"
+                    onClick={onPaymentClick}
+                    disabled={paymentStatus}
+                  >
+                    {paymentStatus ? "Paid" : "Pay Now"}
+                  </Button>
                 </Row>
               </ListGroup.Item>
             </ListGroup>
