@@ -26,24 +26,22 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
 
   const [updateUserProfile, { isLoading }] = useUpdateUserProfileMutation();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
-    const res = updateUserProfile({
+    const res = await updateUserProfile({
       id: userInfo._id,
       name,
       email,
       password: password || undefined, // Only send password if it's not empty
     }).unwrap();
 
-    dispatch(
-      setCredentials({
-        ...res,
-      })
-    );
+    console.log("Profile updated:", res);
+
+    dispatch(setCredentials(res));
   };
 
   const { data, isLoading: loadingOrders } = useGetMyOrdersQuery(undefined);
