@@ -15,6 +15,7 @@ import PaymentScreen from "./Screens/PaymentScreen.tsx";
 import PlaceOrderScreen from "./Screens/PlaceOrderScreen.tsx";
 import OrderScreen from "./Screens/OrderScreen.tsx";
 import ProfileScreen from "./Screens/ProfileScreen.tsx";
+import ProductListScreen from "./Screens/Admin/ProductListScreen.tsx";
 
 export const App = () => {
   return (
@@ -37,6 +38,14 @@ export const App = () => {
             </Route>
             <Route path="" element={<AdminRoute />}>
               <Route path="/admin/orderlist" element={<OrderListScreen />} />
+              <Route
+                path="/admin/productlist"
+                element={<ProductListScreen />}
+              />
+              <Route
+                path="/admin/userlist"
+                element={<div>User List Screen</div>}
+              />
             </Route>
           </Routes>
         </Container>

@@ -12,6 +12,8 @@ export type ProductType = {
   rating: number;
   numReviews: number;
   countInStock?: number;
+  category?: string;
+  brand?: string;
 };
 
 export const Product: FC<ProductType> = ({
