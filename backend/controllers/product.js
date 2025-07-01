@@ -1,6 +1,25 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Product from "../models/productModel.js";
 
+const createProduct = asyncHandler(async (req, res) => {
+  const { name, image, brand, category, description, price, countInStock } =
+    req.body;
+
+  const product = new Product({
+    user: req.user._id,
+    name,
+    image,
+    brand,
+    category,
+    description,
+    price,
+    countInStock,
+  });
+
+  const createdProduct = await product.save();
+  res.status(201).json(createdProduct);
+});
+
 // @desc    Fetch all products
 // @route   GET /api/products
 const getProducts = asyncHandler(async (req, res) => {
@@ -21,4 +40,4 @@ const getProductById = asyncHandler(async (req, res) => {
   throw new Error("Product not found");
 });
 
-export { getProducts, getProductById };
+export { getProducts, getProductById, createProduct };
