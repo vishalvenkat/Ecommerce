@@ -9,6 +9,8 @@ import LoginScreen from "./Screens/LoginScreen.tsx";
 import RegisterScreen from "./Screens/RegisterScreen.tsx";
 import ShippingScreen from "./Screens/ShippingScreen.tsx";
 import PrivateRoute from "./Components/PrivateRoute.tsx";
+import AdminRoute from "./Components/AdminRoute.tsx";
+import OrderListScreen from "./Screens/Admin/OrderListScreen.tsx";
 import PaymentScreen from "./Screens/PaymentScreen.tsx";
 import PlaceOrderScreen from "./Screens/PlaceOrderScreen.tsx";
 import OrderScreen from "./Screens/OrderScreen.tsx";
@@ -32,6 +34,9 @@ export const App = () => {
               <Route path="/placeorder" element={<PlaceOrderScreen />} />
               <Route path="/order/:id" element={<OrderScreen />} />
               <Route path="/profile" element={<ProfileScreen />} />
+            </Route>
+            <Route path="" element={<AdminRoute />}>
+              <Route path="/admin/orderlist" element={<OrderListScreen />} />
             </Route>
           </Routes>
         </Container>

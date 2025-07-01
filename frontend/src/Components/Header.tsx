@@ -31,20 +31,35 @@ export const Header = () => {
   };
 
   const signInLink = userInfo ? (
-    <NavDropdown
-      title={
-        <>
-          <FaUser />
-          {userInfo.name}
-        </>
-      }
-      id="username"
-    >
-      <NavDropdown.Item as={Link} to="/profile">
-        Profile
-      </NavDropdown.Item>
-      <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
-    </NavDropdown>
+    <>
+      <NavDropdown
+        title={
+          <>
+            <FaUser />
+            {userInfo.name}
+          </>
+        }
+        id="username"
+      >
+        <NavDropdown.Item as={Link} to="/profile">
+          Profile
+        </NavDropdown.Item>
+        <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+      </NavDropdown>
+      {userInfo.isAdmin && (
+        <NavDropdown title="Admin" id="adminmenu">
+          <NavDropdown.Item as={Link} to="/admin/productlist">
+            Products
+          </NavDropdown.Item>
+          <NavDropdown.Item as={Link} to="/admin/userlist">
+            Users
+          </NavDropdown.Item>
+          <NavDropdown.Item as={Link} to="/admin/orderlist">
+            Orders
+          </NavDropdown.Item>
+        </NavDropdown>
+      )}
+    </>
   ) : (
     <Link to="/login" className="nav-link">
       <FaUser />
