@@ -35,6 +35,12 @@ const endpoints = (builder) => ({
       method: "GET",
     }),
   }),
+  updateDelivered: builder.mutation({
+    query: (id) => ({
+      url: `${ORDERS_URL}/${id}/delivered`,
+      method: "PUT",
+    }),
+  }),
 });
 
 export const ordersApiSlice = apiSlice.injectEndpoints({ endpoints });
@@ -44,4 +50,5 @@ export const {
   useAddToCartMutation,
   useUpdatePaidMutation,
   useGetAllOrdersQuery,
+  useUpdateDeliveredMutation,
 } = ordersApiSlice;

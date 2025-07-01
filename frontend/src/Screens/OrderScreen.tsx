@@ -2,22 +2,28 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   useGetMyOrderByIdQuery,
+  useUpdateDeliveredMutation,
   useUpdatePaidMutation,
 } from "../slices/ordersApiSlice.js";
 import Loader from "../Components/Loader.tsx";
 import { Button, Card, Col, Image, ListGroup, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const OrderScreen = () => {
   const { id } = useParams();
   const { data, refetch, isLoading } = useGetMyOrderByIdQuery(id);
   const order: any = data || {};
+  const { userInfo } = useSelector((state: any) => state.auth);
+  const [delivered] = useUpdateDeliveredMutation();
 
   const [payment] = useUpdatePaidMutation();
   const [paymentStatus, setPaymentStatus] = useState(false);
+  const [deliveryStatus, setDeliveryStatus] = useState(false);
 
   useEffect(() => {
     if (order) {
       setPaymentStatus(order.isPaid);
+      setDeliveryStatus(order.isDelivered);
     }
   }, [order]);
 
@@ -41,6 +47,36 @@ const OrderScreen = () => {
   if (isLoading) {
     return <Loader />;
   }
+
+  const onDeliveredClick = async () => {
+    if (!order) return;
+    const res = await delivered(order._id).unwrap();
+    if (res) {
+      refetch();
+    }
+  };
+
+  const paymentButton = (
+    <Button
+      type="button"
+      className="btn btn-block"
+      onClick={onPaymentClick}
+      disabled={paymentStatus}
+    >
+      {paymentStatus ? "Paid" : "Pay Now"}
+    </Button>
+  );
+
+  const deliveredButton = (
+    <Button
+      type="button"
+      className="btn btn-block"
+      onClick={onDeliveredClick}
+      disabled={deliveryStatus}
+    >
+      {deliveryStatus ? "Delivered" : "Mark as Delivered"}
+    </Button>
+  );
   return (
     <Row>
       <Col md={8}>
@@ -147,14 +183,9 @@ const OrderScreen = () => {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Button
-                    type="button"
-                    className="btn btn-block"
-                    onClick={onPaymentClick}
-                    disabled={paymentStatus}
-                  >
-                    {paymentStatus ? "Paid" : "Pay Now"}
-                  </Button>
+                  {userInfo && userInfo.isAdmin
+                    ? deliveredButton
+                    : paymentButton}
                 </Row>
               </ListGroup.Item>
             </ListGroup>
