@@ -13,12 +13,21 @@ const endpoints = (builder) => ({
       url: `${PRODUCTS_URL}/${id}`,
     }),
     keepUnusedDataFor: 5, // 5 seconds
+    providedTags: ["Product"],
   }),
   createProduct: builder.mutation({
     query: (product) => ({
       url: PRODUCTS_URL,
       method: "POST",
       body: { ...product },
+    }),
+    invalidatesTags: [{ type: "Product" }],
+  }),
+  updateProduct: builder.mutation({
+    query: ({ id, ...product }) => ({
+      url: `${PRODUCTS_URL}/${id}`,
+      method: "PUT",
+      body: product,
     }),
     invalidatesTags: [{ type: "Product" }],
   }),
@@ -29,4 +38,5 @@ export const {
   useGetProductsQuery,
   useGetProductsByIdQuery,
   useCreateProductMutation,
+  useUpdateProductMutation,
 } = productsApiSlice;

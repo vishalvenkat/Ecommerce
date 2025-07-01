@@ -5,7 +5,7 @@ type CustomFormGroupProps = {
   name: string;
   label: string;
   type?: string;
-  value: string;
+  value: string | number;
   placeholder?: string;
   onChangeHandler?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
@@ -20,7 +20,9 @@ const CustomFormGroup = ({
 }: CustomFormGroupProps) => {
   return (
     <Form.Group controlId={name} className="my-3">
-      <Form.Label>{label}</Form.Label>
+      <Form.Label>
+        <strong>{label}</strong>
+      </Form.Label>
       <Form.Control
         type={type}
         placeholder={placeholder}

@@ -16,6 +16,7 @@ import PlaceOrderScreen from "./Screens/PlaceOrderScreen.tsx";
 import OrderScreen from "./Screens/OrderScreen.tsx";
 import ProfileScreen from "./Screens/ProfileScreen.tsx";
 import ProductListScreen from "./Screens/Admin/ProductListScreen.tsx";
+import ProductEditScreen from "./Screens/Admin/ProductEditScreen.tsx";
 
 export const App = () => {
   return (
@@ -41,6 +42,10 @@ export const App = () => {
               <Route
                 path="/admin/productlist"
                 element={<ProductListScreen />}
+              />
+              <Route
+                path="/admin/product/:id/edit"
+                element={<ProductEditScreen />}
               />
               <Route
                 path="/admin/userlist"
