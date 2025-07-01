@@ -29,6 +29,12 @@ const endpoints = (builder) => ({
       body: { ...paymentResult },
     }),
   }),
+  getAllOrders: builder.query({
+    query: () => ({
+      url: ORDERS_URL,
+      method: "GET",
+    }),
+  }),
 });
 
 export const ordersApiSlice = apiSlice.injectEndpoints({ endpoints });
@@ -37,4 +43,5 @@ export const {
   useGetMyOrderByIdQuery,
   useAddToCartMutation,
   useUpdatePaidMutation,
+  useGetAllOrdersQuery,
 } = ordersApiSlice;

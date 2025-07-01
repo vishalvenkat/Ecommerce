@@ -48,7 +48,10 @@ const AddToCart = asyncHandler(async (req, res) => {
 // @route   GET /api/orders/myorders
 // @access  Private
 const getMyOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ user: req.user.id });
+  const orders = await Order.find({ user: req.user.id }).populate(
+    "user",
+    "name id"
+  );
   if (!orders || orders.length === 0) {
     res.status(404);
     throw new Error("No orders found for this user");
@@ -60,10 +63,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
 // @route   GET /api/orders/:id
 // @access  Private
 const getMyOrderById = asyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.id).populate(
-    "user",
-    "name email"
-  );
+  const order = await Order.findById(req.params.id);
   if (order) {
     res.json(order);
   } else {
@@ -111,7 +111,7 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 // @route   GET /api/orders
 // @access  Private/Admin
 const getAllOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({});
+  const orders = await Order.find({}).populate("user", "name email");
   if (!orders || orders.length === 0) {
     res.status(404);
     throw new Error("No orders found");
