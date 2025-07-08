@@ -9,6 +9,7 @@ import Loader from "../Components/Loader.tsx";
 import AlertMessage from "../Components/AlertMessage.tsx";
 import { addToCart } from "../slices/cartSlice.js";
 import { useDispatch } from "react-redux";
+import GoBackButton from "../Components/GoBackButton.tsx";
 
 export const ProductScreen: FC = () => {
   const { id } = useParams();
@@ -31,11 +32,9 @@ export const ProductScreen: FC = () => {
 
   return (
     <>
-      <Link to="/" className="btn btn-light my-3">
-        Go back
-      </Link>
+      <GoBackButton linkTo="/" />
 
-      <Row>
+      <Row className="my-3">
         {/* Image banner column */}
         <Col md={5}>
           <Image src={currentProduct?.image} alt={currentProduct?.name} fluid />

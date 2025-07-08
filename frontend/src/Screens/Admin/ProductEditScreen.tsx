@@ -10,6 +10,7 @@ import { Button, Form } from "react-bootstrap";
 import Loader from "../../Components/Loader.tsx";
 import CustomFormGroup from "../../Components/CustomFormGroup.tsx";
 import FormContainer from "../../Components/FormContainer.tsx";
+import GoBackButton from "../../Components/GoBackButton.tsx";
 
 const ProductEditScreen = () => {
   const { id } = useParams();
@@ -63,14 +64,6 @@ const ProductEditScreen = () => {
       navigate("/admin/productlist");
     }
   };
-
-  const goBackButton = (
-    <Link to="/admin/productlist">
-      <Button variant="light" className="btn-sm">
-        Go Back
-      </Button>
-    </Link>
-  );
 
   const [uploadImage, { isLoading }] = useUploadProductImageMutation();
   const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,7 +167,7 @@ const ProductEditScreen = () => {
 
   return (
     <>
-      {goBackButton}
+      <GoBackButton linkTo="/admin/productlist" />
       {(isProductLoading || isUpdating) && <Loader />}
       {productUpdateForm}
     </>
