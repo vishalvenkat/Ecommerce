@@ -25,7 +25,7 @@ app.get("/health", (_req, res) => {
 app.use("/api/products", products);
 app.use("/api/users", user);
 app.use("/api/orders", orders);
-app.use("/api/uploads", upload);
+app.use("/api/upload", upload);
 
 // Serve static files from the 'uploads' directory
 // This allows access to uploaded files via a URL like /uploads/filename.jpg

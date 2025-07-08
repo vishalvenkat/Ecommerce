@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   useGetProductsByIdQuery,
   useUpdateProductMutation,
+  useUploadProductImageMutation,
 } from "../../slices/productApiSlice";
 import { ProductType } from "../../Components/Product";
 import { Button, Form } from "react-bootstrap";
@@ -71,6 +72,19 @@ const ProductEditScreen = () => {
     </Link>
   );
 
+  const [uploadImage, { isLoading }] = useUploadProductImageMutation();
+  const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+      const res: any = await uploadImage(formData).unwrap();
+      if (res) {
+        setImage(res.imageUrl);
+      }
+    }
+  };
+
   const productUpdateForm = (
     <FormContainer>
       <Form onSubmit={updateProductHandler}>
@@ -82,6 +96,22 @@ const ProductEditScreen = () => {
           placeholder="Enter product name"
           onChangeHandler={(e) => setName(e.target.value)}
         />
+        <Form.Group controlId="Image" className="my-3">
+          <Form.Label>
+            <strong>Image</strong>
+          </Form.Label>
+          <Form.Control
+            type="text"
+            value={image}
+            placeholder="Enter product image URL"
+            onChange={(e) => setImage(e.target.value)}
+          />
+          <Form.Control
+            type="file"
+            onChange={uploadFileHandler}
+            className="mt-2"
+          />
+        </Form.Group>
         <CustomFormGroup
           name="price"
           label="Price"

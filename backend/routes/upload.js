@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
  * Function to filter allowed file types (only jpeg, jpg, png).
  * It checks both the file extension and MIME type.
  */
-const checkFileType = (file, cb) => {
+const checkFileType = (req, file, cb) => {
   // Allowed file types
   const filetypes = /jpeg|jpg|png/;
 
@@ -54,7 +54,7 @@ const upload = multer({ storage, fileFilter: checkFileType });
  * - Uploads a single image file with field name 'image'
  * - Responds with the path to the uploaded image
  */
-router.post("/upload", upload.single("image"), (req, res) => {
+router.post("/", upload.single("image"), (req, res) => {
   // Respond with JSON containing the file URL
   res.json({ imageUrl: `/uploads/${req.file.filename}` });
 });
