@@ -1,4 +1,7 @@
-import { useGetProductsQuery } from "../../slices/productApiSlice";
+import {
+  useDeleteProductMutation,
+  useGetProductsQuery,
+} from "../../slices/productApiSlice";
 import { ProductType } from "../../Components/Product";
 import { Button, Col, Image, Row, Table } from "react-bootstrap";
 import { CgAdd } from "react-icons/cg";
@@ -8,9 +11,10 @@ import { Link } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 const ProductListScreen = () => {
-  const { data, isLoading, isError } = useGetProductsQuery(undefined);
+  const { data, isLoading, isError, refetch } = useGetProductsQuery(undefined);
+  const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
   const products = data as ProductType[];
-  if (isLoading) {
+  if (isLoading || isDeleting) {
     return <Loader />;
   }
   if (isError) {
@@ -54,8 +58,12 @@ const ProductListScreen = () => {
     </Button>
   );
 
-  const deleteProductHandler = (productId: number) => {
+  const deleteProductHandler = async (productId: number) => {
     // Logic to delete the product
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      await deleteProduct(productId);
+      refetch(); // Refetch the products after deletion
+    }
   };
 
   const productsHeaderRow = (
