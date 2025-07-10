@@ -24,6 +24,7 @@ const CustomFormGroup = ({
         <strong>{label}</strong>
       </Form.Label>
       <Form.Control
+        name={name}
         type={type}
         placeholder={placeholder}
         value={value}

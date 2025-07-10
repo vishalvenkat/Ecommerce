@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  useCreateProductMutation,
   useGetProductsByIdQuery,
   useUpdateProductMutation,
   useUploadProductImageMutation,
@@ -14,15 +15,19 @@ import GoBackButton from "../../Components/GoBackButton.tsx";
 
 const ProductEditScreen = () => {
   const { id } = useParams();
+  const isEditMode = Boolean(id);
   const navigate = useNavigate();
 
   const {
     data,
     isLoading: isProductLoading,
     refetch,
-  } = useGetProductsByIdQuery(id);
+  } = useGetProductsByIdQuery(id, {
+    skip: !isEditMode, // Skip the query if not in edit mode
+  });
   const product = data as ProductType;
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
+  const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
   const [uploadImage, { isLoading: isUploading }] =
     useUploadProductImageMutation();
 
@@ -37,7 +42,7 @@ const ProductEditScreen = () => {
   });
 
   useEffect(() => {
-    if (product) {
+    if (isEditMode && product) {
       setFormData({
         name: product.name,
         price: product.price,
@@ -48,7 +53,7 @@ const ProductEditScreen = () => {
         countInStock: product.countInStock || 0,
       });
     }
-  }, [product]);
+  }, [isEditMode, product]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
@@ -61,7 +66,11 @@ const ProductEditScreen = () => {
   const updateProductHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await updateProduct({ id, ...formData }).unwrap();
+      if (isEditMode && !id) {
+        await updateProduct({ id, ...formData }).unwrap();
+      } else {
+        await createProduct(formData).unwrap();
+      }
       refetch();
       navigate("/admin/productlist");
     } catch (error) {
@@ -83,7 +92,8 @@ const ProductEditScreen = () => {
     }
   };
 
-  if (isProductLoading || isUpdating || isUploading) return <Loader />;
+  if (isProductLoading || isUpdating || isUploading || isCreating)
+    return <Loader />;
 
   return (
     <>
@@ -166,9 +176,9 @@ const ProductEditScreen = () => {
             type="submit"
             variant="primary"
             className="my-3"
-            disabled={isUpdating}
+            disabled={isUpdating || isCreating || isUploading}
           >
-            Update Product
+            {isEditMode ? "Update Product" : "Create Product"}
           </Button>
         </Form>
       </FormContainer>

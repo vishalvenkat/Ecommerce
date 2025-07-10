@@ -1,7 +1,4 @@
-import {
-  useCreateProductMutation,
-  useGetProductsQuery,
-} from "../../slices/productApiSlice";
+import { useGetProductsQuery } from "../../slices/productApiSlice";
 import { ProductType } from "../../Components/Product";
 import { Button, Col, Image, Row, Table } from "react-bootstrap";
 import { CgAdd } from "react-icons/cg";
@@ -11,8 +8,7 @@ import { Link } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 const ProductListScreen = () => {
-  const { data, isLoading, isError, refetch } = useGetProductsQuery(undefined);
-  const [createProduct] = useCreateProductMutation();
+  const { data, isLoading, isError } = useGetProductsQuery(undefined);
   const products = data as ProductType[];
   if (isLoading) {
     return <Loader />;
@@ -31,23 +27,13 @@ const ProductListScreen = () => {
     </AlertMessage>
   );
 
-  const createProductHandler = async () => {
-    // Logic to create a new product will be implemented here.
-    // For now, we will just call the createProduct mutation with default values.
-    await createProduct({
-      name: "New Product",
-      price: 0,
-      category: "",
-      brand: "",
-    });
-    refetch();
-  };
-
   const createProductButton = (
-    <Button onClick={createProductHandler}>
-      <CgAdd />
-      Create Product
-    </Button>
+    <Link to="/admin/product/create">
+      <Button variant="primary" className="my-3">
+        <CgAdd />
+        Create Product
+      </Button>
+    </Link>
   );
 
   const editProductButton = (productId: number) => (

@@ -48,6 +48,10 @@ export const App = () => {
                 element={<ProductEditScreen />}
               />
               <Route
+                path="/admin/product/create"
+                element={<ProductEditScreen />}
+              />
+              <Route
                 path="/admin/userlist"
                 element={<div>User List Screen</div>}
               />
