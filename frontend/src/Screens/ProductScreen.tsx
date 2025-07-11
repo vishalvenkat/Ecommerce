@@ -13,7 +13,6 @@ import Rating from "../Components/Rating.tsx";
 
 import { useGetProductsByIdQuery } from "../slices/productApiSlice.js";
 import { useCreateReviewsMutation } from "../slices/reviewApiSlice.js";
-import { ProductType } from "../Components/Product.tsx";
 import Loader from "../Components/Loader.tsx";
 import AlertMessage from "../Components/AlertMessage.tsx";
 import { addToCart } from "../slices/cartSlice.js";
@@ -32,24 +31,23 @@ export const ProductScreen: FC = () => {
   const [createReview, { isLoading: isReviewLoading }] =
     useCreateReviewsMutation();
 
-  const anyData: any = data;
-  const currentProduct: ProductType | undefined = anyData?.product;
-  const currentProductReview = anyData?.reviews;
+  const productData: any = data;
+  const { product, reviews } = productData || {};
 
   const { userInfo } = useSelector((state: any) => state.auth);
 
-  const myReview = currentProductReview?.find(
+  const myReview = reviews?.find(
     (review: any) => review.user._id === userInfo?.id
   );
 
   if (isLoading) return <Loader />;
-  if (isError || !currentProduct)
+  if (isError || !product)
     return (
       <AlertMessage variant={"danger"}>Error Loading Product</AlertMessage>
     );
 
   const addToCartHandler = () => {
-    dispatch(addToCart({ ...currentProduct, qty }));
+    dispatch(addToCart({ ...product, qty }));
     navigate(`/cart`);
   };
 
@@ -69,26 +67,24 @@ export const ProductScreen: FC = () => {
       <Row className="my-3">
         {/* Image banner column */}
         <Col md={5}>
-          <Image src={currentProduct?.image} alt={currentProduct?.name} fluid />
+          <Image src={product?.image} alt={product?.name} fluid />
         </Col>
 
         {/* Name, Ratings, Price and Product description */}
         <Col md={4}>
           <ListGroup variant="flush">
             <ListGroup.Item>
-              <h3>{currentProduct?.name}</h3>
+              <h3>{product?.name}</h3>
             </ListGroup.Item>
             <ListGroup.Item>
               <Rating
-                rating={currentProduct?.rating ?? 0}
-                numReviews={currentProduct?.numReviews ?? 0}
+                rating={product?.rating ?? 0}
+                numReviews={product?.numReviews ?? 0}
               />
             </ListGroup.Item>
+            <ListGroup.Item>Price: ${product?.price ?? 0.0}</ListGroup.Item>
             <ListGroup.Item>
-              Price: ${currentProduct?.price ?? 0.0}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              {currentProduct?.description ?? currentProduct?.name}
+              {product?.description ?? product?.name}
             </ListGroup.Item>
           </ListGroup>
         </Col>
@@ -101,7 +97,7 @@ export const ProductScreen: FC = () => {
                 <Row>
                   <Col>Price: </Col>
                   <Col>
-                    <strong>${currentProduct?.price ?? 0}</strong>
+                    <strong>${product?.price ?? 0}</strong>
                   </Col>
                 </Row>
               </ListGroup.Item>
@@ -110,14 +106,12 @@ export const ProductScreen: FC = () => {
                   <Col>Status: </Col>
                   <Col>
                     <strong>
-                      {currentProduct?.countInStock
-                        ? "In Stock"
-                        : "Out of Stock"}
+                      {product?.countInStock ? "In Stock" : "Out of Stock"}
                     </strong>
                   </Col>
                 </Row>
               </ListGroup.Item>
-              {currentProduct?.countInStock ? (
+              {product?.countInStock ? (
                 <ListGroup.Item>
                   <Row>
                     <Col>Qty</Col>
@@ -127,13 +121,11 @@ export const ProductScreen: FC = () => {
                         value={qty}
                         onChange={(e) => setQty(Number(e.target.value))}
                       >
-                        {[...Array(currentProduct.countInStock).keys()].map(
-                          (x) => (
-                            <option key={x + 1} value={x + 1}>
-                              {x + 1}
-                            </option>
-                          )
-                        )}
+                        {[...Array(product.countInStock).keys()].map((x) => (
+                          <option key={x + 1} value={x + 1}>
+                            {x + 1}
+                          </option>
+                        ))}
                       </Form.Control>
                     </Col>
                   </Row>
@@ -143,7 +135,7 @@ export const ProductScreen: FC = () => {
                 <button
                   className="btn btn-primary"
                   type="button"
-                  disabled={currentProduct?.countInStock === 0}
+                  disabled={product?.countInStock === 0}
                   onClick={addToCartHandler}
                 >
                   Add to cart
@@ -154,7 +146,7 @@ export const ProductScreen: FC = () => {
         </Col>
       </Row>
       <Row className="my-3">
-        <h2>Reviews {`(${currentProductReview?.length})`}</h2>
+        <h2>Reviews {`(${reviews?.length})`}</h2>
         <Col md={6}>
           {myReview ? (
             <ListGroup variant="flush">
@@ -216,16 +208,15 @@ export const ProductScreen: FC = () => {
           )}
         </Col>
         <Col md={6}>
-          {currentProductReview?.filter(
-            (review: any) => review.user?.id !== userInfo?.id
-          ).length === 0 ? (
+          {reviews?.filter((review: any) => review.user?.id !== userInfo?.id)
+            .length === 0 ? (
             <AlertMessage variant="info">No Review Yet</AlertMessage>
           ) : (
             <Card>
               <Card.Header>Reviews</Card.Header>
               <Card.Body>
                 <ListGroup variant="flush">
-                  {currentProductReview
+                  {reviews
                     .filter((review: any) => review.user?._id !== userInfo?.id)
                     .map((review) => (
                       <ListGroup.Item key={review._id}>
