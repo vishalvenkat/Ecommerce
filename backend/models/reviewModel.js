@@ -7,9 +7,10 @@ const reviewSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
-    name: {
-      type: String,
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: "Product",
     },
     rating: {
       type: Number,

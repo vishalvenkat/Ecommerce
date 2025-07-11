@@ -6,6 +6,7 @@ import DbConnection from "./config/db.js";
 import products from "./routes/product.js";
 import orders from "./routes/order.js";
 import user from "./routes/user.js";
+import reviews from "./routes/review.js";
 import upload from "./routes/upload.js";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 dotenv.config();
@@ -26,6 +27,7 @@ app.use("/api/products", products);
 app.use("/api/users", user);
 app.use("/api/orders", orders);
 app.use("/api/upload", upload);
+app.use("/api/reviews", reviews);
 
 // Serve static files from the 'uploads' directory
 // This allows access to uploaded files via a URL like /uploads/filename.jpg

@@ -1,5 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Product from "../models/productModel.js";
+import Review from "../models/reviewModel.js";
 
 const createProduct = asyncHandler(async (req, res) => {
   const { name, image, brand, category, description, price, countInStock } =
@@ -54,12 +55,16 @@ const getProducts = asyncHandler(async (req, res) => {
 const getProductById = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
-  if (product) {
-    return res.json(product);
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
   }
-
-  res.status(404);
-  throw new Error("Product not found");
+  // Populate reviews with user details
+  const reviews = await Review.find({ product: product._id }).populate(
+    "user",
+    "name"
+  );
+  return res.json({ product, reviews });
 });
 
 const deleteProduct = asyncHandler(async (req, res) => {
