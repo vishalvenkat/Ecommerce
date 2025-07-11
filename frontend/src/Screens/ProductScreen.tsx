@@ -1,33 +1,65 @@
 import React, { FC, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Card, Col, Form, Image, ListGroup, Row } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Image,
+  ListGroup,
+  Row,
+} from "react-bootstrap";
 import Rating from "../Components/Rating.tsx";
 
 import { useGetProductsByIdQuery } from "../slices/productApiSlice.js";
+import { useCreateReviewsMutation } from "../slices/reviewApiSlice.js";
 import { ProductType } from "../Components/Product.tsx";
 import Loader from "../Components/Loader.tsx";
 import AlertMessage from "../Components/AlertMessage.tsx";
 import { addToCart } from "../slices/cartSlice.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import GoBackButton from "../Components/GoBackButton.tsx";
 
 export const ProductScreen: FC = () => {
   const { id } = useParams();
   const [qty, setQty] = useState<number>(1);
+  const [rating, setRating] = useState<number>(0);
+  const [comment, setComment] = useState<string>("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { data, isLoading, isError } = useGetProductsByIdQuery(id);
+  const { data, isLoading, isError, refetch } = useGetProductsByIdQuery(id);
+  const [createReview, { isLoading: isReviewLoading }] =
+    useCreateReviewsMutation();
 
-  const currentProduct = data as ProductType;
+  const anyData: any = data;
+  const currentProduct: ProductType | undefined = anyData?.product;
+  const currentProductReview = anyData?.reviews;
+
+  const { userInfo } = useSelector((state: any) => state.auth);
+
+  const myReview = currentProductReview?.find(
+    (review: any) => review.user._id === userInfo?.id
+  );
 
   if (isLoading) return <Loader />;
   if (isError || !currentProduct)
-    <AlertMessage variant={"danger"}>Error Loading Product</AlertMessage>;
+    return (
+      <AlertMessage variant={"danger"}>Error Loading Product</AlertMessage>
+    );
 
   const addToCartHandler = () => {
     dispatch(addToCart({ ...currentProduct, qty }));
     navigate(`/cart`);
+  };
+
+  const onReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (rating === 0 || comment.trim() === "") {
+      return alert("Please fill in all fields");
+    }
+    await createReview({ product: id, rating, comment }).unwrap();
+    refetch();
   };
 
   return (
@@ -119,6 +151,100 @@ export const ProductScreen: FC = () => {
               </ListGroup.Item>
             </ListGroup>
           </Card>
+        </Col>
+      </Row>
+      <Row className="my-3">
+        <h2>Reviews {`(${currentProductReview?.length})`}</h2>
+        <Col md={6}>
+          {myReview ? (
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <h4>Your Review</h4>
+                <Rating rating={myReview.rating} />
+                <p>{myReview.comment}</p>
+              </ListGroup.Item>
+            </ListGroup>
+          ) : (
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <h4>Write a Review</h4>
+                {userInfo ? (
+                  <Form onSubmit={onReviewSubmit}>
+                    <Form.Group controlId="rating">
+                      <Form.Label>Rating</Form.Label>
+                      <Form.Control
+                        as="select"
+                        required
+                        value={rating}
+                        onChange={(e) => setRating(Number(e.target.value))}
+                      >
+                        <option value="0">Select...</option>
+                        <option value="1">1 - Poor</option>
+                        <option value="2">2 - Fair</option>
+                        <option value="3">3 - Good</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="5">5 - Excellent</option>
+                      </Form.Control>
+                    </Form.Group>
+
+                    <Form.Group controlId="comment">
+                      <Form.Label>Comment</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        required
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                      ></Form.Control>
+                    </Form.Group>
+
+                    <Button
+                      className="btn-primary"
+                      type="submit"
+                      disabled={isReviewLoading}
+                    >
+                      Submit Review
+                    </Button>
+                  </Form>
+                ) : (
+                  <AlertMessage variant="info">
+                    Please <Link to="/login">Login</Link> to write a review.
+                  </AlertMessage>
+                )}
+              </ListGroup.Item>
+            </ListGroup>
+          )}
+        </Col>
+        <Col md={6}>
+          {currentProductReview?.filter(
+            (review: any) => review.user?.id !== userInfo?.id
+          ).length === 0 ? (
+            <AlertMessage variant="info">No Review Yet</AlertMessage>
+          ) : (
+            <Card>
+              <Card.Header>Reviews</Card.Header>
+              <Card.Body>
+                <ListGroup variant="flush">
+                  {currentProductReview
+                    .filter((review: any) => review.user?._id !== userInfo?.id)
+                    .map((review) => (
+                      <ListGroup.Item key={review._id}>
+                        <Row>
+                          <Col xs={8}>
+                            <strong>{review.user.name}</strong>
+                          </Col>
+                          <Col xs={4}>
+                            <Rating rating={review.rating} />
+                          </Col>
+                        </Row>
+
+                        <p>{review.comment}</p>
+                      </ListGroup.Item>
+                    ))}
+                </ListGroup>
+              </Card.Body>
+            </Card>
+          )}
         </Col>
       </Row>
     </>

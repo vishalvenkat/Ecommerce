@@ -2,7 +2,7 @@ import React, { FC, JSX } from "react";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 type RatingProps = {
   rating: number;
-  numReviews: number;
+  numReviews?: number;
 };
 const Rating: FC<RatingProps> = ({ rating, numReviews }) => {
   const renderStars = () => {
@@ -22,7 +22,7 @@ const Rating: FC<RatingProps> = ({ rating, numReviews }) => {
   return (
     <span className="rating">
       {renderStars()}
-      <span className="rating-text">{numReviews && `(${numReviews})`}</span>
+      {numReviews && <span className="rating-text">{`(${numReviews})`}</span>}
     </span>
   );
 };
