@@ -4,6 +4,7 @@ import { FC } from "react";
 import { useGetProductsQuery } from "../slices/productApiSlice.js";
 import Loader from "../Components/Loader.tsx";
 import AlertMessage from "../Components/AlertMessage.tsx";
+import Meta from "../Components/Meta.tsx";
 
 export const HomeScreen: FC = () => {
   const { data, isLoading, isError } = useGetProductsQuery(undefined);
@@ -17,6 +18,7 @@ export const HomeScreen: FC = () => {
 
   return (
     <>
+      <Meta title="Latest Products" description="Browse our latest products" />
       <h1>Latest Product</h1>
       <Row>
         {products.map((product) => (
