@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import GoBackButton from "../../Components/GoBackButton.tsx";
 import FormContainer from "../../Components/FormContainer.tsx";
 import { Button, Form } from "react-bootstrap";
@@ -13,7 +13,7 @@ const UserEditScreen = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, isLoading: isUserLoading, refetch } = useGetUserByIdQuery(id);
+  const { data, refetch } = useGetUserByIdQuery(id);
   const [updateUserById, { isLoading: isUpdating }] =
     useUpdateUserByIdMutation();
   const user: any = data;

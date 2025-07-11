@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AlertMessage from "../Components/AlertMessage.tsx";
 import { Link, useNavigate } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
-import { getNoOfItemsInCart, getTotalPrice } from "../utils/cartUtils.js";
+import { getNoOfItemsInCart } from "../utils/cartUtils.js";
 import { addToCart, removeFromCart } from "../slices/cartSlice.js";
 
 const CartScreen = () => {
