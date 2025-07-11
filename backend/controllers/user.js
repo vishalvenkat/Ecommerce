@@ -2,6 +2,7 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import { generateToken, setTokenInCookie } from "../utils/generateToken.js";
 
+// #region User specific controllers
 /**
  * User specific controllers
  * These controllers are accessible by all authenticated users.
@@ -122,6 +123,9 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   });
 });
 
+// #endregion User specific controllers
+
+// #region Admin specific controllers
 /**
  * Admin specific controllers
  * These controllers are only accessible by admin users.
@@ -133,7 +137,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 const getUserById = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id).select("-password");
   if (user) {
     return res.json(user);
   }
@@ -141,7 +145,7 @@ const getUserById = asyncHandler(async (req, res) => {
   throw new Error("User not found");
 });
 
-const updateUser = asyncHandler(async (req, res) => {
+const updateUserById = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
 
   if (!user) {
@@ -152,7 +156,7 @@ const updateUser = asyncHandler(async (req, res) => {
   user.name = req.body.name || user.name;
   user.email = req.body.email || user.email;
   user.isAdmin =
-    req.body.isAdmin !== undefined ? req.body.isAdmin : user.isAdmin;
+    req.body.isAdmin !== undefined ? Boolean(req.body.isAdmin) : user.isAdmin;
   const updatedUser = await user.save();
   res.json({
     _id: updatedUser._id,
@@ -165,13 +169,18 @@ const updateUser = asyncHandler(async (req, res) => {
 const deleteUserById = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
   if (user) {
-    await user.remove();
+    if (user.isAdmin) {
+      res.status(400);
+      throw new Error("Cannot delete an admin user");
+    }
+    await User.deleteOne({ _id: req.params.id });
     res.json({ message: "User removed" });
   } else {
     res.status(404);
     throw new Error("User not found");
   }
 });
+// #endregion Admin specific controllers
 
 export {
   loginUser,
@@ -181,6 +190,6 @@ export {
   updateUserProfile,
   getAllUsers,
   getUserById,
-  updateUser,
+  updateUserById,
   deleteUserById,
 };
