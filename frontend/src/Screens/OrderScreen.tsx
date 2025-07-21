@@ -21,11 +21,11 @@ const OrderScreen = () => {
   const [deliveryStatus, setDeliveryStatus] = useState(false);
 
   useEffect(() => {
-    if (order) {
+    if (order.isPaid !== undefined && order.isDelivered !== undefined) {
       setPaymentStatus(order.isPaid);
       setDeliveryStatus(order.isDelivered);
     }
-  }, [order]);
+  }, [order.isPaid, order.isDelivered]);
 
   const onPaymentClick = () => {
     if (!order) return;

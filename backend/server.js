@@ -35,14 +35,17 @@ app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 if (process.env.NODE_ENV === "production") {
   // Serve static files from the React frontend app
   // The build directory contains the production-ready React app
-  app.use(express.static(path.join(__dirname, "/frontend/build")));
+  const frontendBuildPath = path.join(__dirname, "frontend", "build");
+  app.use(express.static(frontendBuildPath));
 
   // Handle any requests that don't match the above routes
   // This will serve the React app for any route that is not handled by the API routes
   // This is useful for single-page applications (SPAs) where the frontend handles routing
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "/frontend/build/index.html"));
-  });
+  // app.get("*", (req, res) => {
+  //   const indexPath = path.join(frontendBuildPath, "index.html");
+  //   console.log(indexPath);
+  //   res.sendFile(indexPath);
+  // });
 } else {
   app.get("/health", (_req, res) => {
     res.send(`Server is running in port: ${PORT}`);
